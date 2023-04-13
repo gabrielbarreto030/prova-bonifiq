@@ -33,7 +33,7 @@ namespace ProvaPub.Controllers
 		[HttpGet("products")]
 		public DefaultList<Product> ListProducts(int page)
 		{
-			var productService = new ProductService(_ctx);
+			
 			return productService.GetList(page);
 		}
 
