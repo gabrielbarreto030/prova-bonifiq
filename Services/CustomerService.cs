@@ -4,24 +4,25 @@ using ProvaPub.Repository;
 
 namespace ProvaPub.Services
 {
-    public class CustomerService
+    public class CustomerService : DefaultService<Customer>
     {
-        TestDbContext _ctx;
-
-        public CustomerService(TestDbContext ctx)
+        public CustomerService(TestDbContext ctx) : base(ctx)
         {
-            _ctx = ctx;
         }
 
-        public CustomerList ListCustomers(int page)
+        public override DefaultList<Customer> GetList(int page)
         {
-            return new CustomerList() { HasNext = false, TotalCount = 10, Customers = _ctx.Customers.ToList() };
+            var customers = _ctx.Customers.ToList().Skip(((page - 1) * 10)).Take(10).ToList();
+            var customersAll = _ctx.Customers.ToList();
+
+
+            return new CustomerList() { HasNext = (page * 10) < customersAll.Count(), TotalCount = customersAll.Count(), Items = customers };
         }
 
         public async Task<bool> CanPurchase(int customerId, decimal purchaseValue)
         {
             if (customerId <= 0) throw new ArgumentOutOfRangeException(nameof(customerId));
-
+        
             if (purchaseValue <= 0) throw new ArgumentOutOfRangeException(nameof(purchaseValue));
 
             //Business Rule: Non registered Customers cannot purchase

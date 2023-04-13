@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ProvaPub.Models;
+using ProvaPub.Models.Payment;
 using ProvaPub.Repository;
 using ProvaPub.Services;
 
@@ -17,9 +18,9 @@ namespace ProvaPub.Controllers
 	public class Parte3Controller :  ControllerBase
 	{
 		[HttpGet("orders")]
-		public async Task<Order> PlaceOrder(string paymentMethod, decimal paymentValue, int customerId)
+		public async Task<Order> PlaceOrder(PaymentCustomer paymentCustomer)
 		{
-			return await new OrderService().PayOrder(paymentMethod, paymentValue, customerId);
+			return await new OrderService().PayOrder(paymentCustomer);
 		}
 	}
 }
